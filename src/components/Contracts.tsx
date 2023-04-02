@@ -1,5 +1,5 @@
 import { usePrepareContractWrite, useContractWrite, useSigner, useContract, useProvider, useContractRead, useAccount } from 'wagmi'
-import * as mainAbi from '../../contract/ts/mainAbi'
+import * as mainAbi from '../contract/ts/mainAbi'
 import { contractAddress } from '../constants/ContractConfig'
 import { useState } from 'react'
 
@@ -34,6 +34,58 @@ export function GetPledgeInfo() {
   
   </div>
     )
+}
+
+
+export function GetPledgeReturnAbi() {
+  const [tokenAddr, setTokenAddr] = useState('');
+  const [pledgeDays, setPledgeDays] = useState(0);
+
+  const { data, isError, isLoading } = useContractRead({
+    address: contractAddress,
+    abi: mainAbi.getPledgeReturnAbi,
+    functionName: 'getPledgeReturnAbi',
+    args: [tokenAddr, pledgeDays],
+  });
+
+  return (
+    <div>
+      <label>
+        Token Address:
+        <input type="text" value={tokenAddr} onChange={e => setTokenAddr(e.target.value)} />
+      </label>
+      <label>
+        Pledge Days:
+        <input type="number" value={pledgeDays} onChange={e => setPledgeDays(Number(e.target.value))} />
+      </label>
+      <button onClick={() => console.log(data)}>
+        Get Pledge Return
+      </button>
+    </div>
+  );
+}
+
+export function GetPledgeReqireAbi() {
+  const [plgToken, setPlgToken] = useState('');
+
+  const { data, isError, isLoading } = useContractRead({
+    address: contractAddress,
+    abi: mainAbi.getPledgeReqireAbi,
+    functionName: 'getPledgeReqireAbi',
+    args: [plgToken],
+  });
+
+  return (
+    <div>
+      <label>
+        Plg Token:
+        <input type="text" value={plgToken} onChange={e => setPlgToken(e.target.value)} />
+      </label>
+      <button onClick={() => console.log(data)}>
+        Get Pledge Reqire
+      </button>
+    </div>
+  );
 }
 
 export function UpdateMintCfg() {
@@ -402,69 +454,206 @@ export function SetPledgeReturn() {
     )
 }
 
-export function mint() {
-
+export function Mint() {
+  const [tokenAddr, setTokenAddr] = useState('');
+  const [tokenId, setTokenId] = useState(0);
+  const [tokenAmount, setTokenAmount] = useState(0);
+  const [cid, setCid] = useState('');
 
   const { config } = usePrepareContractWrite({
     address: contractAddress,
     abi: mainAbi.mintAbi,
     functionName: 'mint',
-    args: [tokenAddr, pledgeDays, pType, profit]
-  })
+    args: [tokenAddr, tokenId, tokenAmount, cid],
+  });
 
-  const { data, isLoading, isSuccess, write } = useContractWrite(config)
-
-
-}
-
-
-export function SetPledgeReturn() {
-  
-  constargsss
-
-
-  const { config } = usePrepareContractWrite({
-    address: contractAddress,
-    abi: mainAbi.setPledgeReturnAbi,
-    functionName: 'setPledgeReturn',
-    args: argsss
-  })
-
-  const { data, isLoading, isSuccess, write } = useContractWrite(config)
+  const { data, isLoading, isSuccess, write } = useContractWrite(config);
 
   return (
     <div>
-      inputsss
-      <button onClick={() => console.log(data)}>
-    updateMintCfg
-    </button>
-  </div>
-    )
+      <label htmlFor="tokenAddr">Token Address:</label>
+      <input
+        id="tokenAddr"
+        type="text"
+        value={tokenAddr}
+        onChange={(e) => setTokenAddr(e.target.value)}
+      />
+      <label htmlFor="tokenId">Token ID:</label>
+      <input
+        id="tokenId"
+        type="number"
+        value={tokenId}
+        onChange={(e) => setTokenId(Number(e.target.value))}
+      />
+      <label htmlFor="tokenAmount">Token Amount:</label>
+      <input
+        id="tokenAmount"
+        type="number"
+        value={tokenAmount}
+        onChange={(e) => setTokenAmount(Number(e.target.value))}
+      />
+      <label htmlFor="cid">CID:</label>
+      <input
+        id="cid"
+        type="text"
+        value={cid}
+        onChange={(e) => setCid(e.target.value)}
+      />
+      <button onClick={() => console.log(data)}>mint</button>
+    </div>
+  );
 }
 
-
-用react写几个输入框 分别赋值给tokenAddr: string, tokenId: number , tokenAmount: number , cid:string把这些参数组合成一个数组不要双引号，不要换行并用这个数组替换掉$argsss，并把useState放在以下方法开头，label和 input替换掉$inputsss。 用首字母小写的方法名替换掉$functionNamesss。用"mainAbi." + 首字母小写方法名 + Abi 替换掉$abisss，替换后的结果应该如此abi:mainAbi.mintAbi。方法名是Mint。
-
-export function SetPledgeReturn() {
-  
-  
-
+export function MintPledgeAbi() {
+  const [tokenAddr, setTokenAddr] = useState('');
+  const [tokenId, setTokenId] = useState(0);
+  const [tokenAmount, setTokenAmount] = useState(0);
+  const [cid, setCid] = useState('');
 
   const { config } = usePrepareContractWrite({
     address: contractAddress,
-    abi: $abisss,
-    functionName: $functionNamesss,
-    args: $argsss
-  })
+    abi: mainAbi.mintPledgeAbi,
+    functionName: 'mintPledgeAbi',
+    args: [tokenAddr, tokenId, tokenAmount, cid],
+  });
 
-  const { data, isLoading, isSuccess, write } = useContractWrite(config)
+  const { data, isLoading, isSuccess, write } = useContractWrite(config);
 
   return (
     <div>
-      $inputsss
-      <button onClick={() => console.log(data)}>
-      $functionNamesss
-    </button>
-  </div>
-    )
+      <label htmlFor="tokenAddr">Token Address:</label>
+      <input
+        id="tokenAddr"
+        type="text"
+        value={tokenAddr}
+        onChange={(e) => setTokenAddr(e.target.value)}
+      />
+      <label htmlFor="tokenId">Token ID:</label>
+      <input
+        id="tokenId"
+        type="number"
+        value={tokenId}
+        onChange={(e) => setTokenId(Number(e.target.value))}
+      />
+      <label htmlFor="tokenAmount">Token Amount:</label>
+      <input
+        id="tokenAmount"
+        type="number"
+        value={tokenAmount}
+        onChange={(e) => setTokenAmount(Number(e.target.value))}
+      />
+      <label htmlFor="cid">CID:</label>
+      <input
+        id="cid"
+        type="text"
+        value={cid}
+        onChange={(e) => setCid(e.target.value)}
+      />
+      <button onClick={() => console.log(data)}>mintPledgeAbi</button>
+    </div>
+  );
 }
+
+
+export function PledgeTokenAbi() {
+  const [tokenAddr, setTokenAddr] = useState('');
+  const [tokenId, setTokenId] = useState(0);
+  const [tokenAmount, setTokenAmount] = useState(0);
+  const [pledgeDays, setPledgeDays] = useState(0);
+
+  const { config } = usePrepareContractWrite({
+    address: contractAddress,
+    abi: mainAbi.pledgeTokenAbi,
+    functionName: 'pledgeTokenAbi',
+    args: [tokenAddr, tokenId, tokenAmount, pledgeDays]
+  });
+
+  const { data, isLoading, isSuccess, write } = useContractWrite(config);
+
+  return (
+    <div>
+      <label>
+        Token Address:
+        <input type="text" value={tokenAddr} onChange={e => setTokenAddr(e.target.value)} />
+      </label>
+      <label>
+        Token ID:
+        <input type="number" value={tokenId} onChange={e => setTokenId(Number(e.target.value))} />
+      </label>
+      <label>
+        Token Amount:
+        <input type="number" value={tokenAmount} onChange={e => setTokenAmount(Number(e.target.value))} />
+      </label>
+      <label>
+        Pledge Days:
+        <input type="number" value={pledgeDays} onChange={e => setPledgeDays(Number(e.target.value))} />
+      </label>
+      <button onClick={() => console.log(data)}>
+        Pledge Token
+      </button>
+    </div>
+  );
+}
+
+export function WithdrawProfitAbi() {
+  const [pledgeToken, setPledgeToken] = useState('');
+  const [tokenId, setTokenId] = useState(0);
+
+  const { config } = usePrepareContractWrite({
+    address: contractAddress,
+    abi: mainAbi.withdrawProfitAbi,
+    functionName: 'withdrawProfitAbi',
+    args: [pledgeToken, tokenId]
+  });
+
+  const { data, isLoading, isSuccess, write } = useContractWrite(config);
+
+  return (
+    <div>
+      <label>
+        Pledge Token:
+        <input type="text" value={pledgeToken} onChange={e => setPledgeToken(e.target.value)} />
+      </label>
+      <label>
+        Token ID:
+        <input type="number" value={tokenId} onChange={e => setTokenId(Number(e.target.value))} />
+      </label>
+      <button onClick={() => console.log(data)}>
+        Withdraw Profit
+      </button>
+    </div>
+  );
+}
+
+
+export function WithdrawPledgeAbi() {
+  const [plgToken, setPlgToken] = useState('');
+  const [tokenId, setTokenId] = useState(0);
+
+  const { config } = usePrepareContractWrite({
+    address: contractAddress,
+    abi: mainAbi.withdrawPledgeAbi,
+    functionName: 'withdrawPledgeAbi',
+    args: [plgToken, tokenId]
+  });
+
+  const { data, isLoading, isSuccess, write } = useContractWrite(config);
+
+  return (
+    <div>
+      <label>
+        PLG Token:
+        <input type="text" value={plgToken} onChange={e => setPlgToken(e.target.value)} />
+      </label>
+      <label>
+        Token ID:
+        <input type="number" value={tokenId} onChange={e => setTokenId(Number(e.target.value))} />
+      </label>
+      <button onClick={() => console.log(data)}>
+        Withdraw Pledge
+      </button>
+    </div>
+  );
+}
+
+

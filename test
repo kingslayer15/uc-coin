@@ -1,0 +1,65 @@
+------------写-----------
+
+用react写几个输入框 分别赋值给acc: string, tokenId: number  把这些参数组合成一个数组不要双引号，不要换行并用这个数组替换掉$argsss，不要新定义变量，并把useState放在以下方法开头，label和 input替换掉$inputsss，不要新定义变量。 用首字母小写的方法名替换掉$functionNamesss。用"mainAbi." + 首字母小写方法名 + Abi 替换掉$abisss，不要新定义变量，替换后的结果应该如此abi:mainAbi.mintAbi。function的名称是GetPledgeInfoAbi。生成答案后去掉import 信息请将以下代码中的函数名称SetPledgeReturn更改为GetPledgeInfoAbi，并根据其他要求进行修改。
+  
+import * as mainAbi from '../contract/ts/mainAbi'
+
+export function SetPledgeReturn() {
+  
+  
+
+
+  const { config } = usePrepareContractWrite({
+    address: contractAddress,
+    abi: $abisss,
+    functionName: $functionNamesss,
+    args: $argsss
+  })
+
+  const { data, isLoading, isSuccess, write } = useContractWrite(config)
+
+  return (
+    <div>
+      $inputsss
+      <button onClick={() => console.log(data)}>
+      $functionNamesss
+    </button>
+  </div>
+    )
+}
+
+
+
+
+
+----------读----
+
+
+
+
+
+用react写几个输入框 分别赋值给acc: string, tokenId: number  把这些参数组合成一个数组不要双引号，不要换行并用这个数组替换掉$argsss，不要新定义变量，并把useState放在以下方法开头，label和 input替换掉$inputsss，不要新定义变量。 用首字母小写的方法名替换掉$functionNamesss。用"mainAbi." + 首字母小写方法名 + Abi 替换掉$abisss，不要新定义变量，替换后的结果应该如此abi:mainAbi.mintAbi。function的名称是GetPledgeInfoAbi。生成答案后去掉import 信息请将以下代码中的函数名称SetPledgeReturn更改为GetPledgeInfoAbi，并根据其他要求进行修改。
+  
+
+import * as mainAbi from '../contract/ts/mainAbi'
+
+export function GetPledgeInfo() {
+
+
+  const { data, isError, isLoading } = useContractRead({
+    address: contractAddress,
+    abi: $abisss,
+    functionName: $functionNamesss,
+    args: $argsss,
+  })
+
+    return (
+    <div>
+    $inputsss
+<button onClick={() => console.log(data)}>
+    $functionNamesss
+    </button>
+  
+  </div>
+    )
+}

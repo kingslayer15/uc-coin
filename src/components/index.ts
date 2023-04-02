@@ -1,4 +1,4 @@
 export { Account } from './Account'
 export { Connect } from './Connect'
 export { NetworkSwitcher } from './NetworkSwitcher'
-export { SetPledgeReqireFrom } from './SetPledgeReqireFrom'
+export { GetPledgeInfo, UpdateMintCfg, SetMintCfg, SetPledgeReqire, SetPledgeReturn} from './Contracts'
