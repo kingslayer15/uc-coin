@@ -16,13 +16,13 @@ function Page() {
 
       {isConnected && (
         <>
-          {/* <GetPledgeInfo/> */}
-          {/* <UpdateMintCfg/> */}
+          {/* <GetPledgeInfo/>
+          <UpdateMintCfg/>
           <SetMintCfg/>
           <SetPledgeReqire/>
           <SetPledgeReturn/>
           <Account />
-          <NetworkSwitcher />
+          <NetworkSwitcher /> */}
         </>
       )}
     </>
