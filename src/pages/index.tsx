@@ -10,7 +10,7 @@ function Page() {
     <>
       {/* <h1>wagmi + Next.js</h1> */}
 
-      {/* <Connect /> */}
+      <Connect />
       
       
 
@@ -23,6 +23,8 @@ function Page() {
           <Contracts.SetPledgeReturn/>
           <Account />
           <NetworkSwitcher /> */}
+          <Contracts.GetPledgeInfo/>
+          <Contracts.UpdateMintCfg/>
         </>
       )}
     </>

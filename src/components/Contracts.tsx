@@ -1,4 +1,13 @@
-import { usePrepareContractWrite, useContractWrite, useSigner, useContract, useProvider, useContractRead, useAccount } from 'wagmi'
+import { 
+  usePrepareContractWrite, 
+  useContractWrite, 
+  useSigner, 
+  useContract, 
+  useProvider, 
+  useContractRead, 
+  useAccount,
+  useWaitForTransaction 
+} from 'wagmi'
 import * as mainAbi from '../contract/ts/mainAbi'
 import { contractAddress } from '../constants/ContractConfig'
 import { useState } from 'react'
@@ -7,6 +16,10 @@ import { useState } from 'react'
 
 
 export function GetPledgeInfo() {
+
+  const { address, isConnecting, isDisconnected, connector } = useAccount()
+  
+
      // 使用useState钩子来管理输入框的状态
  const [acc, setAcc] = useState('')
  const [tokenAddr, setTokenAddr] = useState('')
@@ -17,8 +30,23 @@ export function GetPledgeInfo() {
     address: contractAddress,
     abi: mainAbi.getPledgeInfoAbi,
     functionName: 'getPledgeInfo',
-    args: [acc, tokenAddr, tokenId],
+    args: [address, '0x77294988Be744e15E4B2Efa0442B48B1624C7911', 1],
   })
+
+  const handleClick = async () => {
+    if (!connector) return;
+    await connector.connect();
+
+    console.log('connector name: ' + connector?.name);
+
+    console.log('data : ' + data);
+    console.log('isLoading : ' + isLoading);
+    console.log('isError : ' + isError);
+
+    console.log('address : ' + address);
+    console.log('isConnecting : ' + isConnecting);
+    console.log('isDisconnected : ' + isDisconnected);
+  };
 
     return (
     <div>
@@ -28,7 +56,7 @@ export function GetPledgeInfo() {
     <input id="tokenAddr" name="tokenAddr" type="text" value={tokenAddr} onChange={(e) => setTokenAddr(e.target.value)}  />
     <label htmlFor="tokenId">tokenId：</label>
     <input id="tokenId" name="tokenId" type="number" value={tokenId} onChange={(e) => setTokenId(Number(e.target.value))}/>
-    <button onClick={() => console.log(data)}>
+    <button onClick={() => handleClick()}>
     getPledgeInfo
     </button>
   
@@ -102,11 +130,14 @@ export function UpdateMintCfg() {
   // "pledgeDays": "质押周期",
   // "tokenAddr": "nft支付地址"
 
-  
-      const { address, isConnecting, isDisconnected } = useAccount()
-
+      // const { address, isConnecting, isDisconnected } = useAccount()
+      const account = useAccount({
+        onConnect({ address, connector, isReconnected }) {
+          console.log('Connected', { address, connector, isReconnected })
+        },
+      })
+      
        // 使用useState钩子来管理输入框的状态
-      //  const [tokenAddr, setTokenAddr] = useState('');
        const [erc, setErc] = useState(0);
        const [nType, setNType] = useState(0);
        const [nLevel, setNLevel] = useState(0);
@@ -123,10 +154,14 @@ export function UpdateMintCfg() {
     address: contractAddress,
     abi: mainAbi.updateMintCfgAbi,
     functionName: 'updateMintCfg',
-    args: [address, erc, nType, nLevel, pledgeDays, payToken, payERC, payValue, aDropToken, aDropERC, aDropValue, adAsProfit]
+    args: [account.address, 1, 2, 1, 1, '0x4977f63b15984e8a98228Df7876a50080aca1143', 0, 0.001, '0x1704b99a38f8381B7A1Cd2f93fc11346a28c8e8D', 0, 0.002, 0]
   })
-  const { data, isLoading, isSuccess, write } = useContractWrite(config)
+  const { data, error, isError, write } = useContractWrite(config)
  
+  const { isLoading, isSuccess } = useWaitForTransaction({
+    hash: data?.hash,
+  });
+
   return (
     <div>
     {/* <label htmlFor="tokenAddr">Token Address:</label>
@@ -224,7 +259,18 @@ export function UpdateMintCfg() {
         checked={adAsProfit}
         onChange={(e) => setAdAsProfit(e.target.checked)}
       />
-      <button onClick={() => console.log(data)}>
+      <button onClick={() => {
+        
+                console.log("data : " + data)
+                console.log("error : " + error)
+                console.log("is : " + error)
+                console.log("write : " + write)
+                console.log("isLoading : " + isLoading)
+                console.log("isSuccess : " + isSuccess)
+                console.log("address : " + account.address)
+                console.log("isConnecting : " + account.isConnecting)
+                console.log("isDisconnected : " + account.isDisconnected)
+      }}>
     updateMintCfg
     </button>
   
@@ -263,6 +309,7 @@ export function SetMintCfg() {
     abi: mainAbi.setMintCfgAbi,
     functionName: 'setMintCfg',
     args: [address, nType, nLevel, payToken, payValue, aDropToken, aDropValue]
+    
   })
 
   const { data, isLoading, isSuccess, write } = useContractWrite(config)
@@ -278,7 +325,7 @@ export function SetMintCfg() {
         onChange={(e) => setTokenAddr(e.target.value)}
       /> */}
 
-      <label htmlFor="nType">N Type:</label>
+      <label htmlFor="nType">nft类型，普通，正常，点票N Type:</label>
       <input
         id="nType"
         type="number"
@@ -286,7 +333,7 @@ export function SetMintCfg() {
         onChange={(e) => setNType(Number(e.target.value))}
       />
 
-      <label htmlFor="nLevel">N Level:</label>
+      <label htmlFor="nLevel">点票级才有等级，level0-2三级N Level:</label>
       <input
         id="nLevel"
         type="number"
@@ -294,7 +341,7 @@ export function SetMintCfg() {
         onChange={(e) => setNLevel(Number(e.target.value))}
       />
 
-      <label htmlFor="payToken">Pay Token:</label>
+      <label htmlFor="payToken">支付铸造的token, 0表示ETHPay Token:</label>
       <input
         id="payToken"
         type="text"
@@ -302,7 +349,7 @@ export function SetMintCfg() {
         onChange={(e) => setPayToken(e.target.value)}
       />
 
-      <label htmlFor="payValue">Pay Value:</label>
+      <label htmlFor="payValue">支付数量Pay Value:</label>
       <input
         id="payValue"
         type="number"
@@ -310,7 +357,7 @@ export function SetMintCfg() {
         onChange={(e) => setPayValue(Number(e.target.value))}
       />
 
-      <label htmlFor="aDropToken">A Drop Token:</label>
+      <label htmlFor="aDropToken">空投TokenA Drop Token:</label>
       <input
         id="aDropToken"
         type="text"
@@ -318,15 +365,20 @@ export function SetMintCfg() {
         onChange={(e) => setADropToken(e.target.value)}
       />
 
-      <label htmlFor="aDropValue">A Drop Value:</label>
+      <label htmlFor="aDropValue">空投数量A Drop Value:</label>
       <input
         id="aDropValue"
         type="number"
         value={aDropValue}
         onChange={(e) => setADropValue(Number(e.target.value))}
       />
-      <button onClick={() => console.log(data)}>
-    updateMintCfg
+      <button onClick={() => {
+        console.log("data : " + data)
+        console.log("isLoading : " + isLoading)
+        console.log("isSuccess : " + isSuccess)
+        console.log("write : " + write)
+      }}>
+      SetMintCfg
     </button>
   
   </div>
