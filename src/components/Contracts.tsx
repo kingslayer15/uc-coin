@@ -130,14 +130,10 @@ export function UpdateMintCfg() {
   // "pledgeDays": "质押周期",
   // "tokenAddr": "nft支付地址"
 
-      // const { address, isConnecting, isDisconnected } = useAccount()
-      const account = useAccount({
-        onConnect({ address, connector, isReconnected }) {
-          console.log('Connected', { address, connector, isReconnected })
-        },
-      })
+      const { address, isConnecting, isDisconnected } = useAccount()
       
        // 使用useState钩子来管理输入框的状态
+       const [tokenAddr, setTokenAddr] = useState('');
        const [erc, setErc] = useState(0);
        const [nType, setNType] = useState(0);
        const [nLevel, setNLevel] = useState(0);
@@ -154,13 +150,13 @@ export function UpdateMintCfg() {
     address: contractAddress,
     abi: mainAbi.updateMintCfgAbi,
     functionName: 'updateMintCfg',
-    args: [account.address, 1, 2, 1, 1, '0x4977f63b15984e8a98228Df7876a50080aca1143', 0, 0.001, '0x1704b99a38f8381B7A1Cd2f93fc11346a28c8e8D', 0, 0.002, 0]
+    args: ['0x77294988Be744e15E4B2Efa0442B48B1624C7911', 1, 2, 1, 1, '0x4977f63b15984e8a98228Df7876a50080aca1143', 0, 0.001, '0x1704b99a38f8381B7A1Cd2f93fc11346a28c8e8D', 0, 0.002, 0]
   })
-  const { data, error, isError, write } = useContractWrite(config)
+  const { data, error, isLoading, isSuccess, isError, write } = useContractWrite(config)
  
-  const { isLoading, isSuccess } = useWaitForTransaction({
-    hash: data?.hash,
-  });
+  // const { isLoading, isSuccess } = useWaitForTransaction({
+  //   hash: data?.hash,
+  // });
 
   return (
     <div>
@@ -170,7 +166,7 @@ export function UpdateMintCfg() {
         type="text"
         value={tokenAddr}
         onChange={(e) => setTokenAddr(e.target.value)}
-      /> */}
+      />
       
       <label htmlFor="erc">ERC:</label>
       <input
@@ -258,7 +254,7 @@ export function UpdateMintCfg() {
         type="checkbox"
         checked={adAsProfit}
         onChange={(e) => setAdAsProfit(e.target.checked)}
-      />
+      /> */}
       <button onClick={() => {
         
                 console.log("data : " + data)
@@ -267,9 +263,9 @@ export function UpdateMintCfg() {
                 console.log("write : " + write)
                 console.log("isLoading : " + isLoading)
                 console.log("isSuccess : " + isSuccess)
-                console.log("address : " + account.address)
-                console.log("isConnecting : " + account.isConnecting)
-                console.log("isDisconnected : " + account.isDisconnected)
+                console.log("address : " + address)
+                console.log("isConnecting : " + isConnecting)
+                console.log("isDisconnected : " + isDisconnected)
       }}>
     updateMintCfg
     </button>

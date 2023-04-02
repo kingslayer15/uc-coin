@@ -23,7 +23,7 @@ function Page() {
           <Contracts.SetPledgeReturn/>
           <Account />
           <NetworkSwitcher /> */}
-          <Contracts.GetPledgeInfo/>
+          {/* <Contracts.GetPledgeInfo/> */}
           <Contracts.UpdateMintCfg/>
         </>
       )}
