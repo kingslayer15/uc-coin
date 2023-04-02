@@ -1,7 +1,7 @@
 import { useAccount } from 'wagmi'
 
 import { Account, Connect, NetworkSwitcher} from '../components'
-import { GetPledgeInfo, UpdateMintCfg, SetMintCfg, SetPledgeReqire, SetPledgeReturn} from '../components'
+import { Contracts } from '../components'
 
 function Page() {
   const { isConnected } = useAccount()
@@ -16,11 +16,11 @@ function Page() {
 
       {isConnected && (
         <>
-          {/* <GetPledgeInfo/>
-          <UpdateMintCfg/>
-          <SetMintCfg/>
-          <SetPledgeReqire/>
-          <SetPledgeReturn/>
+          {/* <Contracts.GetPledgeInfo/>
+          <Contracts.UpdateMintCfg/>
+          <Contracts.SetMintCfg/>
+          <Contracts.SetPledgeReqire/>
+          <Contracts.SetPledgeReturn/>
           <Account />
           <NetworkSwitcher /> */}
         </>
