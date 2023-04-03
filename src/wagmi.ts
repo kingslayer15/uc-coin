@@ -9,7 +9,7 @@ import { providers } from 'ethers'
 
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [mainnet, ...(process.env.NODE_ENV === 'development' ? [sepolia] : [])],
+  [mainnet, goerli, ...(process.env.NODE_ENV === 'development' ? [sepolia] : [])],
   [
     infuraProvider({ apiKey: '2b221935e814478890e7dfd1728054ee' }),
   ],
@@ -20,6 +20,6 @@ export const client = createClient({
   connectors: [
     new MetaMaskConnector({ chains }),
   ],
-  provider,
+  provider: new providers.InfuraProvider('sepolia', '2b221935e814478890e7dfd1728054ee'),
   webSocketProvider,
 })
