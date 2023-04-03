@@ -6,13 +6,14 @@ import {
   useProvider, 
   useContractRead, 
   useAccount,
-  useWaitForTransaction 
+  useWaitForTransaction,
 } from 'wagmi'
 import * as mainAbi from '../contract/ts/mainAbi'
 import { contractAddress } from '../constants/ContractConfig'
 import { useState } from 'react'
-import { BigNumber } from 'ethers'
+import { BigNumber, utils } from 'ethers'
 import { useEffect } from 'react';
+import styles from './test.module.css';
 
 
 
@@ -89,30 +90,16 @@ export function GetPledgeInfo() {
     args: [`0x${address}`, `0x${tokenAddr}`, BigNumber.from(tokenId)],
   })
 
-  
-  //   return (
-  //   <div>
-  //   <label htmlFor="acc">用户地址</label>
-  //   <input id="acc" name="acc" type="text" value={acc} onChange={(e) => setAcc(e.target.value)}  />
-  //   <label htmlFor="tokenAddr">代币地址：</label>
-  //   <input id="tokenAddr" name="tokenAddr" type="text" value={tokenAddr} onChange={(e) => setTokenAddr(e.target.value)}  />
-  //   <label htmlFor="tokenId">tokenId：</label>
-  //   <input id="tokenId" name="tokenId" type="number" value={tokenId} onChange={(e) => setTokenId(Number(e.target.value))}/>
-  //   <button onClick={() => ()}>
-    
-    
-  //   getPledgeInfo
-  //   </button>
-  
-  // </div>
-  //   )
   const handleButtonClick = async () => {
     setShowResult(true);
   };
 
   
     return (
-      <div>
+      <div className={styles.borderedDiv}>
+        <p>
+        <span className={styles.boldText}>返回指定token在指定质押期内的收益情况</span>。
+      </p>
         <label htmlFor="acc">用户地址</label>
     <input id="acc" name="acc" type="text" value={acc} onChange={(e) => setAcc(e.target.value)}  />
     <label htmlFor="tokenAddr">代币地址：</label>
@@ -133,7 +120,7 @@ export function GetPledgeInfo() {
         </div>
       )}
     </div>
-  );
+
       </div>
     );
 }
@@ -145,13 +132,44 @@ export function GetPledgeReturn() {
 
   const { data, isError, isLoading } = useContractRead({
     address: contractAddress,
-    abi: mainAbi.getPledgeReturnAbi,
-    functionName: 'getPledgeReturnAbi',
-    args: [tokenAddr, pledgeDays],
+    abi: [{
+      inputs: [
+        {
+          internalType: 'address',
+          name: 'tokenAddr',
+          type: 'address'
+        },
+        {
+          internalType: 'uint16',
+          name: 'pledgeDays',
+          type: 'uint16'
+        }
+      ],
+      name: 'getPledgeReturn',
+      outputs: [
+        {
+          internalType: 'uint8',
+          name: '',
+          type: 'uint8'
+        },
+        {
+          internalType: 'uint256',
+          name: '',
+          type: 'uint256'
+        }
+      ],
+      stateMutability: 'view',
+      type: 'function'
+    }],
+    functionName: 'getPledgeReturn',
+    args: [tokenAddr as `0x${string}`, pledgeDays],
   });
 
   return (
-    <div>
+    <div className={styles.borderedDiv} >
+<p>
+        <span className={styles.boldText}>返回指定token在指定质押期内的收益情况</span>。
+      </p>
       <label>
         Token Address:
         <input type="text" value={tokenAddr} onChange={e => setTokenAddr(e.target.value)} />
@@ -160,7 +178,7 @@ export function GetPledgeReturn() {
         Pledge Days:
         <input type="number" value={pledgeDays} onChange={e => setPledgeDays(Number(e.target.value))} />
       </label>
-      <button onClick={() => console.log(data)}>
+      <button onClick={() => console.log(data)}>Get Pledge Return</button>
         {<div>
           {isLoading ? (
             <p>加载中...</p>
@@ -170,8 +188,7 @@ export function GetPledgeReturn() {
             <p>合约方法返回值：{JSON.stringify(data)}</p>
           )}
         </div>}
-        Get Pledge Return
-      </button>
+        
     </div>
   );
 }
@@ -187,12 +204,15 @@ export function GetPledgeReqire() {
   });
 
   return (
-    <div>
+    <div className={styles.borderedDiv} >
+<p>
+        <span className={styles.boldText}>返回指定token在指定质押期内的收益情况</span>。
+      </p>
       <label>
         Plg Token:
         <input type="text" value={plgToken} onChange={e => setPlgToken(e.target.value)} />
       </label>
-      <button onClick={() => console.log(data)}>
+      <button onClick={() => console.log(data)}>Get Pledge Reqire</button>
         {
           <div>
           {isLoading ? (
@@ -204,8 +224,7 @@ export function GetPledgeReqire() {
           )}
         </div>
         }
-        Get Pledge Reqire
-      </button>
+        
     </div>
   );
 }
@@ -242,7 +261,7 @@ export function UpdateMintCfg() {
 
 
   const { config } = usePrepareContractWrite({
-    address: '0x314BD43a969b70BA2c7d7195E7aF723B9A875D2D',
+    address: contractAddress,
     abi: [
       {
         inputs: [
@@ -302,7 +321,7 @@ export function UpdateMintCfg() {
       },
     ],
     functionName: 'updateMintCfg',
-    args: [tokenAddr as `0x${string}`, erc, nType, nLevel, pledgeDays, payToken as `0x${string}`, payERC, BigNumber.from(payValue ? payValue.toString() : '0'), aDropToken as `0x${string}`, aDropERC, BigNumber.from(aDropValue ? aDropValue.toString() : '0'), adAsProfit]
+    args: [tokenAddr as `0x${string}`, erc, nType, nLevel, pledgeDays, payToken as `0x${string}`, payERC, BigNumber.from(payValue ? utils.parseEther(payValue.toString()) : '0'), aDropToken as `0x${string}`, aDropERC, BigNumber.from(aDropValue ? utils.parseEther(aDropValue.toString()) : '0'), adAsProfit]
     // args: ['0x77294988Be744e15E4B2Efa0442B48B1624C7911', 1, 2, 1, 1, '0x4977f63b15984e8a98228Df7876a50080aca1143', 0, BigNumber.from(1), '0x1704b99a38f8381B7A1Cd2f93fc11346a28c8e8D', 0, BigNumber.from(2), false]
   })
 
@@ -311,17 +330,11 @@ export function UpdateMintCfg() {
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
   })
-      // 更新铸造配置
-      // const updateConfig = () => {
-                
-        // const { address, isConnecting, isDisconnected } = useAccount()
-        // console.log("address: ", address)
-        
-      
- 
-
   return (
-    <div>
+    <div className={styles.borderedDiv} >
+<p>
+        <span className={styles.boldText}>配置铸造信息</span>。
+      </p>
     <label htmlFor="tokenAddr">nft支付地址:</label>
       <input
         id="tokenAddr"
@@ -504,7 +517,7 @@ export function SetMintCfg() {
       type: 'function'
     }],
     functionName: 'setMintCfg',
-    args: [address as `0x${string}`, nType, nLevel, payToken as `0x${string}`, BigNumber.from(payValue), aDropToken as `0x${string}`, BigNumber.from(aDropValue)]
+    args: [address as `0x${string}`, nType, nLevel, payToken as `0x${string}`, BigNumber.from(payValue ? utils.parseEther(payValue.toString()) : '0'), aDropToken as `0x${string}`, BigNumber.from(aDropValue ? utils.parseEther(aDropValue.toString()) : '0')]
     
   })
 
@@ -512,7 +525,10 @@ export function SetMintCfg() {
 
 
   return (
-    <div>
+    <div className={styles.borderedDiv} >
+<p>
+        <span className={styles.boldText}>配置铸造信息，参数看updateMintCfg方法</span>。
+      </p>
       
       <label htmlFor="nType">nft类型，普通，正常，点票:</label>
       <input
@@ -627,7 +643,10 @@ export function SetPledgeReqire() {
 
 
   return (
-    <div>
+    <div className={styles.borderedDiv} >
+<p>
+        <span className={styles.boldText}>设置质押信息</span>。
+      </p>
   <label htmlFor="plgToken">质押token:</label>
       <input
         type="text"
@@ -717,13 +736,16 @@ export function SetPledgeReturn() {
       type: "function"
     }],
     functionName: 'setPledgeReturn',
-    args: [tokenAddr as `0x${string}`, pledgeDays, pType, BigNumber.from(profit)]
+    args: [tokenAddr as `0x${string}`, pledgeDays, pType, BigNumber.from(profit ? utils.parseEther(profit.toString()) : '0')]
   })
 
   const { data, isLoading, isSuccess, write } = useContractWrite(config)
 
   return (
-    <div>
+    <div className={styles.borderedDiv} >
+<p>
+        <span className={styles.boldText}>返回指定token在指定质押期内的收益情况(仅管理员操作)</span>。
+      </p>
   <label htmlFor="tokenAddr">Token Address:</label>
       <input
         id="tokenAddr"
@@ -824,7 +846,10 @@ export function Mint() {
   const { data, isLoading, isSuccess, write } = useContractWrite(config);
 
   return (
-    <div>
+    <div className={styles.borderedDiv} >
+<p>
+        <span className={styles.boldText}>铸造NFT(本合约必须先成为NFT合约miner)</span>。
+      </p>
        <label htmlFor="cid">NFT CID:</label>
       <input
         type="text"
@@ -923,13 +948,16 @@ export function MintPledge() {
       type: "function"
     }],
     functionName: 'mintPledge',
-    args: [tokenAddr as `0x${string}`, BigNumber.from(tokenId), BigNumber.from(tokenAmount), cid, pledgeDays],
+    args: [tokenAddr as `0x${string}`, BigNumber.from(tokenId), BigNumber.from(tokenAmount ? utils.parseEther(tokenAmount.toString()) : '0'), cid, pledgeDays],
   });
 
   const { data, isLoading, isSuccess, write } = useContractWrite(config);
 
   return (
-    <div>
+    <div className={styles.borderedDiv} >
+<p>
+        <span className={styles.boldText}>铸造并质押token(本合约必须先成为NFT合约miner)</span>。
+      </p>
       <label htmlFor="cid">NFT CID:</label>
       <input
         type="text"
@@ -1014,13 +1042,16 @@ export function PledgeToken() {
       type: 'function'
     }],
     functionName: 'pledgeToken',
-    args: [tokenAddr as `0x${string}`, BigNumber.from(tokenId), BigNumber.from(tokenAmount), pledgeDays]
+    args: [tokenAddr as `0x${string}`, BigNumber.from(tokenId), BigNumber.from(tokenAmount ? utils.parseEther(tokenAmount.toString()) : '0'), pledgeDays]
   });
 
   const { data, isLoading, isSuccess, write } = useContractWrite(config);
 
   return (
-    <div>
+    <div className={styles.borderedDiv} >
+<p>
+        <span className={styles.boldText}>手动质押</span>。
+      </p>
       <label htmlFor="pledgeDays">质押天数，支持7/30/90/180:</label>
       <input
         type="number"
@@ -1104,7 +1135,10 @@ export function WithdrawProfit() {
   const { data, isLoading, isSuccess, write } = useContractWrite(config);
 
   return (
-    <div>
+    <div className={styles.borderedDiv} >
+<p>
+        <span className={styles.boldText}>提取收益</span>。
+      </p>
       <label htmlFor="pledgeToken">被质押的token:</label>
       <input
         type="text"
@@ -1167,7 +1201,10 @@ export function WithdrawPledge() {
   const { data, isLoading, isSuccess, write } = useContractWrite(config);
 
   return (
-    <div>
+    <div className={styles.borderedDiv} >
+<p>
+        <span className={styles.boldText}>WithdrawPledge</span>。
+      </p>
       <label>
         PLG Token:
         <input type="text" value={plgToken} onChange={e => setPlgToken(e.target.value)} />
