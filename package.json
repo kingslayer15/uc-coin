@@ -1,26 +1,41 @@
 {
   "name": "uc-coin",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "export": "next export",
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.13",
+    "@headlessui/tailwindcss": "^0.1.2",
+    "@heroicons/react": "^2.0.17",
+    "@mdx-js/loader": "^2.3.0",
+    "@mdx-js/react": "^2.3.0",
+    "@next/mdx": "^13.2.4",
+    "@rainbow-me/rainbowkit": "^0.12.5",
+    "@tailwindcss/line-clamp": "^0.4.4",
+    "@tailwindcss/typography": "^0.5.9",
+    "classnames": "^2.3.2",
     "ethers": "^5.7.2",
-    "next": "^13.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "next": "13.2.4",
+    "next-mdx-remote": "^4.4.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "wagmi": "^0.12.8"
   },
   "devDependencies": {
-    "@types/node": "^17.0.31",
-    "@types/react": "^18.0.9",
-    "@types/react-dom": "^18.0.3",
-    "eslint": "^8.15.0",
-    "eslint-config-next": "^12.1.6",
-    "typescript": "^4.9.4"
+    "@types/node": "18.15.11",
+    "@types/react": "18.0.31",
+    "@types/react-dom": "18.0.11",
+    "autoprefixer": "10.4.14",
+    "clsx": "^1.2.1",
+    "postcss": "8.4.21",
+    "tailwind-merge": "^1.11.0",
+    "tailwindcss": "3.3.1",
+    "typescript": "5.0.3"
   }
 }
